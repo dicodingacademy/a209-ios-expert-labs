@@ -30,7 +30,7 @@
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M2t-SO-JAP">
                                 <rect key="frame" x="20" y="394" width="374" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" textContentType="password"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3rC-aD-DwS">
                                 <rect key="frame" x="20" y="369" width="74" height="21"/>
@@ -41,7 +41,7 @@
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AK8-vR-TrO">
                                 <rect key="frame" x="20" y="469" width="374" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" textContentType="password"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cJa-9p-9vX">
                                 <rect key="frame" x="20" y="444" width="139" height="21"/>
@@ -68,9 +68,6 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
-                                <connections>
-                                    <action selector="signUpButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OvU-ob-Daf"/>
-                                </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fVO-Rs-vBi">
                                 <rect key="frame" x="20" y="244" width="374" height="34"/>
@@ -92,14 +89,17 @@
                             <constraint firstItem="3rC-aD-DwS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="5wE-Rs-zEA"/>
                             <constraint firstItem="Gn1-qB-hyq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="6e1-US-30Z"/>
                             <constraint firstItem="hQ2-Kf-LxG" firstAttribute="top" secondItem="AjA-gp-OVI" secondAttribute="bottom" constant="50" id="6gs-s4-aJt"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hQ2-Kf-LxG" secondAttribute="trailing" priority="1" constant="349" id="7nB-HC-2RK"/>
                             <constraint firstItem="NNS-CD-7xd" firstAttribute="top" secondItem="Z0S-v6-Tl6" secondAttribute="bottom" constant="4" id="8vB-IX-MSy"/>
                             <constraint firstItem="Z0S-v6-Tl6" firstAttribute="top" secondItem="fVO-Rs-vBi" secondAttribute="bottom" constant="16" id="C2l-3N-jJb"/>
                             <constraint firstItem="AjA-gp-OVI" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="95" id="Cf2-7R-9dM"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="cJa-9p-9vX" secondAttribute="trailing" priority="1" constant="255" id="EW3-OX-O4m"/>
                             <constraint firstItem="fVO-Rs-vBi" firstAttribute="top" secondItem="hQ2-Kf-LxG" secondAttribute="bottom" constant="4" id="LIY-at-fhy"/>
                             <constraint firstItem="cJa-9p-9vX" firstAttribute="top" secondItem="M2t-SO-JAP" secondAttribute="bottom" constant="16" id="Mj9-cS-MIe"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="M2t-SO-JAP" secondAttribute="trailing" constant="20" id="Nd8-CA-ZV1"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="fVO-Rs-vBi" secondAttribute="trailing" constant="20" id="RG9-Op-L20"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="AjA-gp-OVI" secondAttribute="trailing" constant="20" id="UyJ-4G-Rkx"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Z0S-v6-Tl6" secondAttribute="trailing" priority="1" constant="353" id="WaH-ja-HLp"/>
                             <constraint firstItem="AjA-gp-OVI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Wsu-yu-W9S"/>
                             <constraint firstItem="fVO-Rs-vBi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="avC-Pq-maD"/>
                             <constraint firstItem="hQ2-Kf-LxG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="baQ-7U-miU"/>
@@ -108,6 +108,7 @@
                             <constraint firstItem="M2t-SO-JAP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="e92-jT-mK9"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Gn1-qB-hyq" secondAttribute="trailing" constant="20" id="eRp-Zf-bOl"/>
                             <constraint firstItem="cJa-9p-9vX" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="g0L-TI-AQf"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="3rC-aD-DwS" secondAttribute="trailing" priority="1" constant="320" id="jpA-Pe-siK"/>
                             <constraint firstItem="Gn1-qB-hyq" firstAttribute="top" secondItem="AK8-vR-TrO" secondAttribute="bottom" constant="40" id="nAQ-EV-bgk"/>
                             <constraint firstItem="AK8-vR-TrO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="qhU-fF-UO8"/>
                             <constraint firstItem="NNS-CD-7xd" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="uDy-Wf-dDd"/>
@@ -120,6 +121,7 @@
                         <outlet property="emailTextField" destination="NNS-CD-7xd" id="dWY-C8-V2v"/>
                         <outlet property="nameTextField" destination="fVO-Rs-vBi" id="daF-3y-sgz"/>
                         <outlet property="passwordTextField" destination="M2t-SO-JAP" id="XHQ-xX-7Yf"/>
+                        <outlet property="signUpButton" destination="Gn1-qB-hyq" id="UFz-0t-bqY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
