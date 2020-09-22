@@ -17,9 +17,12 @@ class ViewController: UIViewController {
   @IBOutlet weak var confirmPasswordTextField: UITextField!
   @IBOutlet weak var signUpButton: UIButton!
 
+  let disposeBag = DisposeBag()
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()
+    setupRx()
   }
 
   private func setupView() {
@@ -112,6 +115,81 @@ class ViewController: UIViewController {
 
     let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
     return emailPred.evaluate(with: email)
+  }
+
+  func setupRx() {
+    let nameStream = nameTextField.rx.text
+      .orEmpty
+      .map { !$0.isEmpty }
+
+    nameStream.subscribe(
+      onNext: { value in
+        self.nameTextField.rightViewMode = value ? .never : .always
+      }
+    ).disposed(by: disposeBag)
+
+    let emailStream = emailTextField.rx.text
+      .orEmpty
+      .map { self.isValidEmail(from: $0)}
+
+    emailStream.subscribe(
+      onNext: { value in
+        self.emailTextField.rightViewMode = value ? .never : .always
+      }
+    ).disposed(by: disposeBag)
+
+    let passwordStream = passwordTextField.rx.text
+      .orEmpty
+      .map { $0.count > 5 }
+
+    passwordStream.subscribe(
+      onNext: { value in
+        self.passwordTextField.rightViewMode = value ? .never : .always
+      }
+    ).disposed(by: disposeBag)
+
+
+    let confirmationPasswordStream = Observable.merge(
+      confirmPasswordTextField.rx.text
+        .orEmpty
+        .map {
+          $0.elementsEqual(self.passwordTextField.text ?? "")
+        },
+      passwordTextField.rx.text
+        .orEmpty
+        .map {
+          $0.elementsEqual(self.confirmPasswordTextField.text ?? "")
+        }
+    )
+
+    confirmationPasswordStream.subscribe(
+      onNext: { value in
+        self.confirmPasswordTextField.rightViewMode = value ? .never : .always
+      }
+    ).disposed(by: disposeBag)
+
+
+    let invalidFieldsStream = Observable.combineLatest(
+      nameStream,
+      emailStream,
+      passwordStream,
+      confirmationPasswordStream
+    ) { name, email, password, confirmationPassword in
+      name && email && password && confirmationPassword
+    }
+
+    invalidFieldsStream.subscribe(
+      onNext: { isValid in
+        if (isValid) {
+          self.signUpButton.isEnabled = true
+          self.signUpButton.backgroundColor = UIColor.systemGreen
+        } else {
+          self.signUpButton.isEnabled = false
+          self.signUpButton.backgroundColor = UIColor.systemGray
+        }
+      }
+    ).disposed(by: disposeBag)
+
   }
 
 }
