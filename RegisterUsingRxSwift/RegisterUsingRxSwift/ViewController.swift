@@ -120,16 +120,19 @@ class ViewController: UIViewController {
   func setupRx() {
     let nameStream = nameTextField.rx.text
       .orEmpty
-      .map { !$0.isEmpty }
+      .skip(1)
+      .map { !$0.isEmpty } // Memastikan nilainya tidak kosong
 
     nameStream.subscribe(
       onNext: { value in
+        // Jika nilainya true maka tidak akan menampilkan eror. Begitu juga sebaliknya.
         self.nameTextField.rightViewMode = value ? .never : .always
       }
     ).disposed(by: disposeBag)
 
     let emailStream = emailTextField.rx.text
       .orEmpty
+      .skip(1)
       .map { self.isValidEmail(from: $0)}
 
     emailStream.subscribe(
@@ -140,6 +143,7 @@ class ViewController: UIViewController {
 
     let passwordStream = passwordTextField.rx.text
       .orEmpty
+      .skip(1)
       .map { $0.count > 5 }
 
     passwordStream.subscribe(
@@ -152,11 +156,13 @@ class ViewController: UIViewController {
     let confirmationPasswordStream = Observable.merge(
       confirmPasswordTextField.rx.text
         .orEmpty
+        .skip(1)
         .map {
           $0.elementsEqual(self.passwordTextField.text ?? "")
         },
       passwordTextField.rx.text
         .orEmpty
+        .skip(1)
         .map {
           $0.elementsEqual(self.confirmPasswordTextField.text ?? "")
         }
