@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ViewController: UIViewController {
 
@@ -15,9 +16,12 @@ class ViewController: UIViewController {
   @IBOutlet weak var confirmPasswordTextField: UITextField!
   @IBOutlet weak var signUpButton: UIButton!
 
+  var cancellables: Set<AnyCancellable> = []
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()
+    setupCombine()
   }
 
   private func setupView() {
@@ -110,6 +114,56 @@ class ViewController: UIViewController {
 
     let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
     return emailPred.evaluate(with: email)
+  }
+
+  private func setupCombine() {
+
+    let nameTextFieldPublisher = NotificationCenter.default
+      .publisher(for: UITextField.textDidChangeNotification, object: nameTextField)
+      .map { ($0.object as? UITextField)?.text }
+      .replaceNil(with: "")
+      .map { !$0.isEmpty }
+
+    nameTextFieldPublisher.sink(receiveValue: { value in
+      self.nameTextField.rightViewMode = value ? .never : .always
+    }).store(in: &cancellables)
+
+    let emailTextFieldPublisher = NotificationCenter.default
+      .publisher(for: UITextField.textDidChangeNotification, object: emailTextField)
+      .map { ($0.object as? UITextField)?.text }
+      .replaceNil(with: "")
+      .map { self.isValidEmail(from: $0) }
+
+    emailTextFieldPublisher.sink(receiveValue: { value in
+      self.emailTextField.rightViewMode = value ? .never : .always
+    }).store(in: &cancellables)
+
+    let passwordTextFieldPublisher = NotificationCenter.default
+      .publisher(for: UITextField.textDidChangeNotification, object: passwordTextField)
+      .map { ($0.object as? UITextField)?.text }
+      .replaceNil(with: "")
+      .map { $0.count > 5 }
+
+    passwordTextFieldPublisher.sink(receiveValue: { value in
+      self.passwordTextField.rightViewMode = value ? .never : .always
+    }).store(in: &cancellables)
+
+    let confirmPasswordTextFieldPublisher = Publishers.Merge(
+      NotificationCenter.default
+        .publisher(for: UITextField.textDidChangeNotification, object: passwordTextField)
+        .map { ($0.object as? UITextField)?.text }
+        .replaceNil(with: "")
+        .map { $0.elementsEqual(self.confirmPasswordTextField.text ?? "") },
+      NotificationCenter.default
+        .publisher(for: UITextField.textDidChangeNotification, object: confirmPasswordTextField)
+        .map { ($0.object as? UITextField)?.text }
+        .replaceNil(with: "")
+        .map { $0.elementsEqual(self.passwordTextField.text ?? "") } )
+
+    confirmPasswordTextFieldPublisher.sink(receiveValue: { value in
+      self.confirmPasswordTextField.rightViewMode = value ? .never : .always
+    }).store(in: &cancellables)
+
   }
 
 }
