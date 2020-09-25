@@ -15,6 +15,11 @@ class ViewController: UIViewController {
   @IBOutlet weak var confirmPasswordTextField: UITextField!
   @IBOutlet weak var signUpButton: UIButton!
 
+  private var isNameValid = false
+  private var isEmailValid = false
+  private var isPasswordValid = false
+  private var isConfirmationPasswordValid = false
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()
@@ -44,17 +49,73 @@ class ViewController: UIViewController {
     switch textField {
     case nameTextField:
       button.addTarget(self, action: #selector(self.showNameExistAlert(_:)), for: .touchUpInside)
+      textField.addTarget(self, action: #selector(nameTextFieldDidChange(_:)), for: .editingChanged)
     case emailTextField:
       button.addTarget(self, action: #selector(self.showEmailExistAlert(_:)), for: .touchUpInside)
+      textField.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
     case passwordTextField:
       button.addTarget(self, action: #selector(self.showPasswordExistAlert(_:)), for: .touchUpInside)
+      textField.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
     case confirmPasswordTextField:
       button.addTarget(self, action: #selector(self.showConfirmationPasswordExistAlert(_:)), for: .touchUpInside)
+      textField.addTarget(self, action: #selector(confirmPasswordTextFieldDidChange(_:)), for: .editingChanged)
     default:
       print("TextField not found")
     }
 
     textField.rightView = button
+  }
+
+  @objc func nameTextFieldDidChange(_ textField: UITextField) {
+    if let input = textField.text {
+      if input.isEmpty {
+        isNameValid = false
+        textField.rightViewMode = .always
+      } else {
+        isNameValid = true
+        textField.rightViewMode = .never
+      }
+      validateButton()
+    }
+  }
+
+  @objc func emailTextFieldDidChange(_ textField: UITextField) {
+    if let input = textField.text {
+      if isValidEmail(from: input) {
+        isEmailValid = true
+        textField.rightViewMode = .never
+      } else {
+        isEmailValid = false
+        textField.rightViewMode = .always
+      }
+      validateButton()
+    }
+  }
+
+  @objc func passwordTextFieldDidChange(_ textField: UITextField) {
+    if let input = textField.text {
+      if input.count < 6 {
+        isPasswordValid = false
+        textField.rightViewMode = .always
+      } else {
+        isPasswordValid = true
+        textField.rightViewMode = .never
+      }
+      validateButton()
+    }
+  }
+
+  @objc func confirmPasswordTextFieldDidChange(_ textField: UITextField) {
+    if let input = textField.text, let password = passwordTextField.text {
+      if input.elementsEqual(password) {
+        isConfirmationPasswordValid = true
+        textField.rightViewMode = .never
+      } else {
+        isConfirmationPasswordValid = false
+        textField.rightViewMode = .always
+      }
+      validateButton()
+    }
   }
 
   @IBAction func showNameExistAlert(_ sender: Any) {
@@ -112,4 +173,15 @@ class ViewController: UIViewController {
     return emailPred.evaluate(with: email)
   }
 
+  private func validateButton() {
+    if isNameValid && isEmailValid && isPasswordValid && isConfirmationPasswordValid {
+      signUpButton.isEnabled = true
+      signUpButton.backgroundColor = UIColor.systemGreen
+    } else {
+      signUpButton.isEnabled = false
+      signUpButton.backgroundColor = UIColor.systemGray
+    }
+  }
+
 }
+
