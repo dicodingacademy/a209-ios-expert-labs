@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ViewController: UIViewController {
 
@@ -14,11 +15,6 @@ class ViewController: UIViewController {
   @IBOutlet weak var passwordTextField: UITextField!
   @IBOutlet weak var confirmPasswordTextField: UITextField!
   @IBOutlet weak var signUpButton: UIButton!
-
-  private var isNameValid = false
-  private var isEmailValid = false
-  private var isPasswordValid = false
-  private var isConfirmationPasswordValid = false
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -184,4 +180,3 @@ class ViewController: UIViewController {
   }
 
 }
-
