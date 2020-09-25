@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ViewController: UIViewController {
 
@@ -15,14 +16,12 @@ class ViewController: UIViewController {
   @IBOutlet weak var confirmPasswordTextField: UITextField!
   @IBOutlet weak var signUpButton: UIButton!
 
-  private var isNameValid = false
-  private var isEmailValid = false
-  private var isPasswordValid = false
-  private var isConfirmationPasswordValid = false
+  var cancellables: Set<AnyCancellable> = []
 
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()
+    setupCombine()
   }
 
   private func setupView() {
@@ -49,73 +48,17 @@ class ViewController: UIViewController {
     switch textField {
     case nameTextField:
       button.addTarget(self, action: #selector(self.showNameExistAlert(_:)), for: .touchUpInside)
-      textField.addTarget(self, action: #selector(nameTextFieldDidChange(_:)), for: .editingChanged)
     case emailTextField:
       button.addTarget(self, action: #selector(self.showEmailExistAlert(_:)), for: .touchUpInside)
-      textField.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
     case passwordTextField:
       button.addTarget(self, action: #selector(self.showPasswordExistAlert(_:)), for: .touchUpInside)
-      textField.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
     case confirmPasswordTextField:
       button.addTarget(self, action: #selector(self.showConfirmationPasswordExistAlert(_:)), for: .touchUpInside)
-      textField.addTarget(self, action: #selector(confirmPasswordTextFieldDidChange(_:)), for: .editingChanged)
     default:
       print("TextField not found")
     }
 
     textField.rightView = button
-  }
-
-  @objc func nameTextFieldDidChange(_ textField: UITextField) {
-    if let input = textField.text {
-      if input.isEmpty {
-        isNameValid = false
-        textField.rightViewMode = .always
-      } else {
-        isNameValid = true
-        textField.rightViewMode = .never
-      }
-      validateButton()
-    }
-  }
-
-  @objc func emailTextFieldDidChange(_ textField: UITextField) {
-    if let input = textField.text {
-      if isValidEmail(from: input) {
-        isEmailValid = true
-        textField.rightViewMode = .never
-      } else {
-        isEmailValid = false
-        textField.rightViewMode = .always
-      }
-      validateButton()
-    }
-  }
-
-  @objc func passwordTextFieldDidChange(_ textField: UITextField) {
-    if let input = textField.text {
-      if input.count < 6 {
-        isPasswordValid = false
-        textField.rightViewMode = .always
-      } else {
-        isPasswordValid = true
-        textField.rightViewMode = .never
-      }
-      validateButton()
-    }
-  }
-
-  @objc func confirmPasswordTextFieldDidChange(_ textField: UITextField) {
-    if let input = textField.text, let password = passwordTextField.text {
-      if input.elementsEqual(password) {
-        isConfirmationPasswordValid = true
-        textField.rightViewMode = .never
-      } else {
-        isConfirmationPasswordValid = false
-        textField.rightViewMode = .always
-      }
-      validateButton()
-    }
   }
 
   @IBAction func showNameExistAlert(_ sender: Any) {
@@ -173,15 +116,73 @@ class ViewController: UIViewController {
     return emailPred.evaluate(with: email)
   }
 
-  private func validateButton() {
-    if isNameValid && isEmailValid && isPasswordValid && isConfirmationPasswordValid {
-      signUpButton.isEnabled = true
-      signUpButton.backgroundColor = UIColor.systemGreen
-    } else {
-      signUpButton.isEnabled = false
-      signUpButton.backgroundColor = UIColor.systemGray
+  private func setupCombine() {
+
+    let namePublisher = NotificationCenter.default
+      .publisher(for: UITextField.textDidChangeNotification, object: nameTextField)
+      .map { ($0.object as? UITextField)?.text }
+      .replaceNil(with: "")
+      .map { !$0.isEmpty }
+
+    namePublisher.sink(receiveValue: { value in
+      self.nameTextField.rightViewMode = value ? .never : .always
+    }).store(in: &cancellables)
+
+    let emailPublisher = NotificationCenter.default
+      .publisher(for: UITextField.textDidChangeNotification, object: emailTextField)
+      .map { ($0.object as? UITextField)?.text }
+      .replaceNil(with: "")
+      .map { self.isValidEmail(from: $0) }
+
+    emailPublisher.sink(receiveValue: { value in
+      self.emailTextField.rightViewMode = value ? .never : .always
+    }).store(in: &cancellables)
+
+    let passwordPublisher = NotificationCenter.default
+      .publisher(for: UITextField.textDidChangeNotification, object: passwordTextField)
+      .map { ($0.object as? UITextField)?.text }
+      .replaceNil(with: "")
+      .map { $0.count > 5 }
+
+    passwordPublisher.sink(receiveValue: { value in
+      self.passwordTextField.rightViewMode = value ? .never : .always
+    }).store(in: &cancellables)
+
+    let confirmationPasswordPublisher = Publishers.Merge(
+      NotificationCenter.default
+        .publisher(for: UITextField.textDidChangeNotification, object: passwordTextField)
+        .map { ($0.object as? UITextField)?.text }
+        .replaceNil(with: "")
+        .map { $0.elementsEqual(self.confirmPasswordTextField.text ?? "") },
+      NotificationCenter.default
+        .publisher(for: UITextField.textDidChangeNotification, object: confirmPasswordTextField)
+        .map { ($0.object as? UITextField)?.text }
+        .replaceNil(with: "")
+        .map { $0.elementsEqual(self.passwordTextField.text ?? "") }
+    )
+
+    confirmationPasswordPublisher.sink(receiveValue: { value in
+      self.confirmPasswordTextField.rightViewMode = value ? .never : .always
+    }).store(in: &cancellables)
+
+    let invalidFieldsPublisher = Publishers.CombineLatest4(
+      namePublisher,
+      emailPublisher,
+      passwordPublisher,
+      confirmationPasswordPublisher
+    ).map { name, email, password, confirmationPassword in
+      name && email && password && confirmationPassword
     }
+
+    invalidFieldsPublisher.sink(receiveValue: { isValid in
+      if (isValid) {
+        self.signUpButton.isEnabled = true
+        self.signUpButton.backgroundColor = UIColor.systemGreen
+      } else {
+        self.signUpButton.isEnabled = false
+        self.signUpButton.backgroundColor = UIColor.systemGray
+      }
+    }).store(in: &cancellables)
   }
 
 }
-
