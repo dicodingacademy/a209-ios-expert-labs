@@ -28,7 +28,7 @@ class MessagePresenterTests: XCTestCase {
     // Then
     XCTAssert(
       result.welcomeMessage.contains(
-        result.welcomeMessage
+        MessagePresenterTests.messageEntitiy.welcomeMessage
       )
     )
 
