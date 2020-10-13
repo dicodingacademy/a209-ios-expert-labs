@@ -40,9 +40,9 @@ class TriangleAppTests: XCTestCase {
       }
     }
 
-    if (sides[0] == sides[1] && sides[0] == sides[2]) {
+    if sides[0] == sides[1] && sides[0] == sides[2] {
       return "Segitiga Sama Sisi"
-    } else if (sides[0] == sides[1] || sides[1] == sides[2]) {
+    } else if sides[0] == sides[1] || sides[1] == sides[2] {
       return "Segitiga Sama Kaki"
     } else {
       return "Segitiga Sembarang"

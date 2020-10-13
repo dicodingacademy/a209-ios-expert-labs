@@ -1,0 +1,6 @@
+module Pods_TriangleApp_Tests_TriangleAppTests {
+  umbrella header "Pods-TriangleApp-Tests-TriangleAppTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
