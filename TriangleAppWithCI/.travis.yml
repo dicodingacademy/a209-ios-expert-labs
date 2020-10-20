@@ -1,0 +1,5 @@
+language: swift
+osx_image: xcode12 
+xcode_project: TriangleApp.xcodeproj 
+xcode_scheme: TriangleApp
+xcode_destination: platform=iOS Simulator,OS=14.0,name=iPhone 11 Pro
