@@ -1,0 +1,22 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '14.0'
+
+use_frameworks!
+
+workspace 'Modularization'
+
+target 'App' do
+# Pods for App
+end
+
+target 'Common' do
+project '../Common/Common'
+end
+
+target 'Cart' do
+project '../Cart/Cart'
+end
+
+target 'Product' do
+project '../Product/Product'
+end
