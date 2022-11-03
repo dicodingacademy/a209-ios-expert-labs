@@ -9,5 +9,7 @@
 import Foundation
 
 protocol MessageRepositoryProtocol {
+
   func getWelcomeMessage(name: String) -> MessageEntity
+
 }

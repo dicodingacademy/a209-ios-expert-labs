@@ -31,7 +31,6 @@ class MessageUseCaseTests: XCTestCase {
         MessageUseCaseTests.messageEntitiy.welcomeMessage
       )
     )
-
   }
 
 }
@@ -46,7 +45,7 @@ extension MessageUseCaseTests {
       return messageEntitiy
     }
 
-    func verify() -> Bool{
+    func verify() -> Bool {
       return functionWasCalled
     }
   }

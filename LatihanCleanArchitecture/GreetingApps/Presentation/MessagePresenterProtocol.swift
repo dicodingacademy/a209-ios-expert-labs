@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol MessagePresenterProtocol: class {
+protocol MessagePresenterProtocol {
   func getMessage(name: String) -> MessageEntity
 }

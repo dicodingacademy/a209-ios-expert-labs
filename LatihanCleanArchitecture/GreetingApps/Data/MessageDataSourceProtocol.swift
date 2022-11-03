@@ -9,5 +9,7 @@
 import Foundation
 
 protocol MessageDataSourceProtocol {
-   func getMessageFromSource(name: String) -> MessageEntity
+
+  func getMessageFromSource(name: String) -> MessageEntity
+
 }

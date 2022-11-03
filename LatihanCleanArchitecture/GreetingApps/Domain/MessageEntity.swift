@@ -9,5 +9,7 @@
 import Foundation
 
 struct MessageEntity {
+
   let welcomeMessage: String
+
 }

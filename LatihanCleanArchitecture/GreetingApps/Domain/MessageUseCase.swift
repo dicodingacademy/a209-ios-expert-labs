@@ -9,5 +9,7 @@
 import Foundation
 
 protocol MessageUseCase {
+
   func getMessage(name: String) -> MessageEntity
+
 }

@@ -9,6 +9,7 @@
 import Foundation
 
 class MessageRepository: MessageRepositoryProtocol {
+
   private let messageDataSource: MessageDataSourceProtocol
 
   init(dataSource: MessageDataSourceProtocol) {
@@ -18,4 +19,5 @@ class MessageRepository: MessageRepositoryProtocol {
   func getWelcomeMessage(name: String) -> MessageEntity {
     messageDataSource.getMessageFromSource(name: name)
   }
+
 }

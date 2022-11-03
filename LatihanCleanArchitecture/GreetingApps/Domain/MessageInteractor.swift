@@ -9,6 +9,7 @@
 import Foundation
 
 class MessageInteractor: MessageUseCase {
+
   private let messageRepository: MessageRepositoryProtocol
 
   init(repository: MessageRepositoryProtocol) {
@@ -18,4 +19,5 @@ class MessageInteractor: MessageUseCase {
   func getMessage(name: String) -> MessageEntity {
     return messageRepository.getWelcomeMessage(name: name)
   }
+
 }

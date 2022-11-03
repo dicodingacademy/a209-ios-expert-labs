@@ -17,7 +17,6 @@ class ViewController: UIViewController {
 
     let usecase = Injection.init().provideUseCase()
     let presenter = MessagePresenter(useCase: usecase)
-
     let message = presenter.getMessage(name: "Dicoding")
 
     welcome.text = message.welcomeMessage
@@ -25,4 +24,3 @@ class ViewController: UIViewController {
   }
 
 }
-
