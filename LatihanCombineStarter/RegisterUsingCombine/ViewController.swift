@@ -38,7 +38,11 @@ class ViewController: UIViewController {
   private func setupTextFields(for textField: UITextField) {
     let button = UIButton(type: .custom)
     button.setImage(UIImage(systemName: "exclamationmark.circle"), for: .normal)
-    button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -16, bottom: 0, right: 0)
+    if #available(iOS 15.0, *) {
+      button.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: -16, bottom: 0, trailing: 0)
+    } else {
+      button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -16, bottom: 0, right: 0)
+    }
     button.frame = CGRect(
       x: CGFloat(nameTextField.frame.size.width - 25),
       y: CGFloat(5),
@@ -169,7 +173,7 @@ class ViewController: UIViewController {
   private func isValidEmail(from email: String) -> Bool {
     let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
 
-    let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+    let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
     return emailPred.evaluate(with: email)
   }
 
@@ -184,4 +188,3 @@ class ViewController: UIViewController {
   }
 
 }
-
