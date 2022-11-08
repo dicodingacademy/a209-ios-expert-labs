@@ -33,7 +33,7 @@ class TriangleAppTests: XCTestCase {
   func testDetectPythagorasTriangle() {
     XCTAssertEqual(try detectTriangle(6, 8, 10), "Segitiga Siku-Siku")
   }
-  
+
   func testInequalityTriangle() {
     XCTAssertThrowsError(try detectTriangle(4, 1, 2)) { error in
       XCTAssertEqual(error as? TriangleError, TriangleError.inequalityInput)
@@ -49,11 +49,10 @@ class TriangleAppTests: XCTestCase {
     _ sideC: Int
   ) throws -> String {
     let sides = [sideA, sideB, sideC].sorted()
-    for side in sides {
-      if side < 0 {
-        throw TriangleError.invalidInput
-      }
+    for side in sides where side < 0 {
+      throw TriangleError.invalidInput
     }
+
     if sides[1] + sides[0] <= sides[2] {
       throw TriangleError.inequalityInput
     } else if sides[0] == sides[1] && sides[0] == sides[2] {
