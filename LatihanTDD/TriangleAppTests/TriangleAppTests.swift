@@ -9,7 +9,7 @@ import XCTest
 @testable import TriangleApp
 class TriangleAppTests: XCTestCase {
 
-  func testInvalidInputSides() {
+  func testInvalidInputDetectTriangle() {
     XCTAssertThrowsError(try detectTriangle(-1, -2, -3)) { error in
       XCTAssertEqual(error as? TriangleError, TriangleError.invalidInput)
     }
@@ -48,12 +48,15 @@ class TriangleAppTests: XCTestCase {
     for side in sides where side < 0 {
       throw TriangleError.invalidInput
     }
-    if sides[1] + sides[0] <= sides[2] {
-      throw TriangleError.inequalityInput
-    } else if sides[0] == sides[1] && sides[0] == sides[2] {
+
+    if sides[0] == sides[1] && sides[0] == sides[2] {
       return "Segitiga Sama Sisi"
     } else if sides[0] == sides[1] || sides[1] == sides[2] {
       return "Segitiga Sama Kaki"
+    } else if sides[1] + sides[0] <= sides[2] {
+      throw TriangleError.inequalityInput
+    } else if sides[2] - sides[1] <= sides[0] {
+      throw TriangleError.inequalityInput
     } else {
       return "Segitiga Sembarang"
     }
